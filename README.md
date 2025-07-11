@@ -1,10 +1,7 @@
 # Fair Assignment System using the Bogomolnaia–Moulin Probabilistic-Serial Algorithm
 
 ## Abstract
-This project presents a browser-based implementation of the Bogomolnaia–Moulin (2001) algorithm for fair allocation of indivisible goods under ordinal preferences.  The application elicits preference rankings from participants, computes the corresponding fractional assignment via the continuous‐time PS eating procedure, and produces a discrete envy-free assignment through randomized rounding.  The system is self-contained (HTML + JavaScript) and requires no back-end infrastructure, making it an ideal demonstrator for market-design principles in educational or experimental settings.
-
-## Keywords
-Fair Division · Envy-Free Allocation · Probabilistic-Serial Mechanism · Market Design · Algorithmic Game Theory
+This project presents a browser-based implementation of the Bogomolnaia–Moulin (2001) algorithm for fair allocation of indivisible goods under ordinal preferences.
 
 ## 1 Introduction
 The fair allocation of indivisible resources is a central topic in mechanism design and social choice.  The algorithm proposed by Bogomolnaia & Moulin [1] is distinguished by three desirable properties:
