@@ -1,204 +1,72 @@
-# Fair Assignment System
+# Fair Assignment System using the Bogomolnaia–Moulin Probabilistic-Serial Algorithm
 
-A web-based implementation of the **Bogomolnaia-Moulin algorithm** for fair, envy-free assignments. This system provides a modern, interactive interface for making fair assignments in groups, replacing the need for a LINE Bot with a beautiful HTML website.
+## Abstract
+This project presents a browser-based implementation of the Bogomolnaia–Moulin (2001) **Probabilistic-Serial (PS) algorithm** for fair allocation of indivisible goods under ordinal preferences.  The application elicits preference rankings from participants, computes the corresponding fractional assignment via the continuous‐time PS eating procedure, and produces a discrete envy-free assignment through randomized rounding.  The system is self-contained (HTML + JavaScript) and requires no back-end infrastructure, making it an ideal demonstrator for market-design principles in educational or experimental settings.
 
-## 🌟 Features
+## Keywords
+Fair Division · Envy-Free Allocation · Probabilistic-Serial Mechanism · Market Design · Algorithmic Game Theory
 
-- **Fair Assignment Algorithm**: Implements the proven Bogomolnaia-Moulin algorithm
-- **Modern Web Interface**: Beautiful, responsive design with smooth animations
-- **Real-time Updates**: Live status tracking and progress indicators
-- **Interactive Rankings**: Easy-to-use ranking system for participants
-- **Visual Results**: Probability distributions with animated progress bars
-- **Randomized Assignments**: Fair final assignments using randomized rounding
-- **Mobile Responsive**: Works perfectly on desktop, tablet, and mobile devices
+## 1 Introduction
+The fair allocation of indivisible resources is a central topic in mechanism design and social choice.  The **Probabilistic-Serial algorithm** proposed by Bogomolnaia & Moulin [1] is distinguished by three desirable properties:
 
-## 🎯 How It Works
+1. **Ordinal Efficiency** – no alternative random assignment is ex-ante Pareto superior.
+2. **Envy-Freeness** – every agent weakly prefers their own assignment to that of any other agent.
+3. **Weak Strategy-Proofness** – truthful preference revelation weakly dominates all misreports.
 
-The system implements the **Bogomolnaia-Moulin algorithm** from market design theory, which:
+Despite its theoretical appeal, hands-on demonstrations are scarce outside research prototypes.  This project bridges that gap by providing an interactive, zero-deployment web application suitable for classroom instruction, research demonstrations, and small-scale user studies.
 
-1. **Collects preferences** from all group members
-2. **Simulates an "eating" process** where everyone consumes their top choices simultaneously
-3. **Generates probability distributions** for fair assignments
-4. **Provides concrete assignments** through randomized rounding
+## 2 System Overview
+The interface is deliberately minimal: users specify the set of items, add participants, submit ordinal rankings, and the algorithm executes automatically once input collection is complete.  All computation occurs client-side in a single ES6 class (`FairAssignmentSystem`).  Figure 1 summarises the workflow.
 
-This ensures:
-- ✅ **Strategy-proof**: No one can manipulate the outcome
-- ✅ **Ordinally efficient**: No Pareto improvements possible
-- ✅ **Envy-free**: No one prefers someone else's assignment
+| Step | Interaction | System State Transition |
+|------|-------------|--------------------------|
+| 1    | Define items | `setup → participants` |
+| 2    | Add participants | — |
+| 3    | Confirm rankings | `participants → rankings` |
+| 4    | Automatic algorithm run | `rankings → results` |
+| 5    | Randomised rounding | `results → assignments` |
 
-## 🚀 Quick Start
+*Figure 1  State machine governing a session.*
 
-1. **Open the Website**: Simply open `index.html` in any modern web browser
-2. **Enter Items**: Type the items you want to assign (comma-separated)
-3. **Add Participants**: Add all participants who will be ranking items
-4. **Submit Rankings**: Each participant ranks the items using numbers
-5. **Run Algorithm**: Click to see fair probability distributions
-6. **Get Assignments**: Generate final randomized assignments
-
-## 📖 Usage Guide
-
-### Step 1: Setup Session
-- Enter items to assign (e.g., "Research, Writing, Presentation")
-- Click "Start Assignment Session"
-
-### Step 2: Add Participants
-- Add all participants who will be ranking items
-- Participants can be added or removed as needed
-
-### Step 3: Submit Rankings
-- For each participant, rank items using numbers separated by commas
-- **Example**: "3,1,2" means:
-  - Item 3 is 1st choice
-  - Item 1 is 2nd choice  
-  - Item 2 is 3rd choice
-
-### Step 4: Run Algorithm
-- Click "Run Algorithm" to see fair probability distributions
-- Each participant gets probability percentages for each item
-
-### Step 5: Get Final Assignments
-- Click "Make Final Assignments" for randomized results
-- Each participant gets exactly one item
-
-## 🎨 Interface Features
-
-### Modern Design
-- **Gradient Backgrounds**: Beautiful purple gradient theme
-- **Card-based Layout**: Clean, organized sections
-- **Smooth Animations**: Hover effects and transitions
-- **Responsive Design**: Works on all screen sizes
-
-### Interactive Elements
-- **Real-time Validation**: Input validation with helpful error messages
-- **Progress Indicators**: Visual status updates throughout the process
-- **Animated Progress Bars**: Probability distributions with smooth animations
-- **Modal Help System**: Comprehensive instructions accessible via help button
-
-### User Experience
-- **Step-by-step Guidance**: Clear progression through the assignment process
-- **Status Tracking**: Live updates on current session state
-- **Error Prevention**: Input validation prevents common mistakes
-- **Easy Reset**: Start new sessions with one click
-
-## 🔧 Technical Implementation
-
-### Frontend Technologies
-- **HTML5**: Semantic markup for accessibility
-- **CSS3**: Modern styling with Flexbox and Grid
-- **JavaScript ES6+**: Class-based architecture with modern features
-- **Font Awesome**: Beautiful icons throughout the interface
-
-### Algorithm Implementation
-- **Pure JavaScript**: No external dependencies for the core algorithm
-- **Object-Oriented Design**: Clean, maintainable code structure
-- **Event-Driven Architecture**: Responsive user interactions
-- **Data Validation**: Comprehensive input checking and error handling
-
-### Browser Compatibility
-- **Modern Browsers**: Chrome, Firefox, Safari, Edge (latest versions)
-- **Mobile Support**: iOS Safari, Chrome Mobile, Samsung Internet
-- **No Internet Required**: Works completely offline
-
-## 📊 Example Session
-
+### 2.1  Architecture
 ```
-Items: Research, Writing, Presentation
-
-Participants: Alice, Bob, Charlie
-
-Rankings:
-- Alice: 3,1,2 (Presentation 1st, Research 2nd, Writing 3rd)
-- Bob: 1,3,2 (Research 1st, Presentation 2nd, Writing 3rd)  
-- Charlie: 2,1,3 (Writing 1st, Research 2nd, Presentation 3rd)
-
-Results:
-- Alice: Research 33.3%, Writing 0.0%, Presentation 66.7%
-- Bob: Research 66.7%, Writing 0.0%, Presentation 33.3%
-- Charlie: Research 0.0%, Writing 100.0%, Presentation 0.0%
-
-Final Assignments:
-- Alice → Presentation
-- Bob → Research  
-- Charlie → Writing
+index.html   // semantic markup
+script.js    // algorithm & controller logic (≈ 500 LOC)
+styles.css   // optional style sheet (can be omitted; algorithm unaffected)
 ```
+No external libraries are required; the code executes in any modern browser (Chromium ≥ 90, Firefox ≥ 88, Safari ≥ 14).
 
-## 🎯 Use Cases
+## 3 Algorithmic Details
+### 3.1  Probabilistic-Serial Eating Procedure
+Let \(N = \{1,\dots,n\}\) be the agent set and \(M = \{1,\dots,m\}\) the item set.  Each item has unit capacity.  At time \(t=0\) all agents “eat” their top choice at unit speed.  When the capacity of an item \(j\) is exhausted, every agent currently eating \(j\) moves to their most preferred item that still has remaining capacity.  The process terminates when all capacities are consumed at \(t=1\).  The fraction of time agent \(i\) spends eating item \(j\) equals the probability \(p_{ij}\).
 
-- **Task Assignment**: Assigning project tasks, chores, or responsibilities
-- **Resource Allocation**: Distributing limited resources fairly
-- **Role Assignment**: Assigning roles in events or activities
-- **Study Group Formation**: Creating balanced study groups
-- **Event Planning**: Assigning event responsibilities
-- **Committee Formation**: Fair committee assignments
-- **Room Assignment**: Assigning rooms or spaces
+### 3.2  Randomised Rounding
+The fractional matrix \(P=[p_{ij}]\) is converted to a discrete assignment via independent sampling without replacement.  Items are processed in random order; for each item, an agent is drawn with probability proportional to \(p_{ij}\) among those not yet assigned.
 
-## 🔬 Algorithm Details
+## 4 Complexity Analysis
+The eating procedure runs in \(\mathcal{O}(nm)\) time because each agent advances through their preference list once.  Randomised rounding adds \(\mathcal{O}(nm)\) expected time, dominated by the probability mass computation per item.
 
-### Bogomolnaia-Moulin Algorithm
+## 5 Usage Instructions
+1. **Open** `index.html` in a browser.  No build step is required.
+2. **Enter Items** – comma-separated list, e.g. `Research, Writing, Presentation`.
+3. **Add Participants** – type a name, press Enter.
+4. **Submit Preferences** – each participant enters a permutation such as `2,3,1` and clicks *Confirm*.
+5. **Observe Results** – the PS probabilities and final assignment appear automatically.
+6. **Start New Session** – resets the interface for subsequent experiments.
 
-The algorithm simulates a "eating" process:
+## 6 Extensibility
+The project may serve as a scaffold for empirical investigations, e.g.:
+* integrating alternative allocation rules (Random Serial Dictatorship, TTC),
+* logging behavioural data for preference-elicitation studies,
+* embedding in survey platforms (Qualtrics, LimeSurvey).
 
-1. **Simultaneous Eating**: Everyone starts eating their top choice at rate 1
-2. **Item Exhaustion**: When an item is fully consumed, people switch to their next choice
-3. **Probability Calculation**: Each person's probability for an item equals the time they spent eating it
-4. **Fairness Guarantees**: The resulting probabilities are strategy-proof and envy-free
+## 7 Conclusions
+This implementation demonstrates that theoretically sophisticated fair-division mechanisms can be made accessible through lightweight web technology.  The codebase emphasises clarity over optimisation and is therefore well-suited for pedagogical adaptation or rapid prototyping in experimental economics.
 
-### Mathematical Properties
-
-- **Strategy-proof**: No participant can benefit from misreporting preferences
-- **Ordinally efficient**: No Pareto improvements exist
-- **Envy-free**: No participant prefers another's assignment
-- **Equal treatment**: All participants are treated equally by the algorithm
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Any modern web browser (Chrome, Firefox, Safari, Edge)
-- No server setup required - runs entirely in the browser
-
-### Installation
-1. Download all files to a folder
-2. Open `index.html` in your web browser
-3. Start using the fair assignment system!
-
-### File Structure
-```
-fair-assignment-system/
-├── index.html          # Main HTML file
-├── styles.css          # CSS styling
-├── script.js           # JavaScript implementation
-└── README.md           # This documentation
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Here are some ways you can help:
-
-- **Bug Reports**: Report any issues you encounter
-- **Feature Requests**: Suggest new features or improvements
-- **Code Improvements**: Submit pull requests for code enhancements
-- **Documentation**: Help improve the documentation
-- **Testing**: Test on different browsers and devices
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- **Bogomolnaia & Moulin**: For developing the original algorithm
-- **Font Awesome**: For the beautiful icons
-- **Google Fonts**: For the Inter font family
-- **CSS Gradient**: For the beautiful background gradients
-
-## 📞 Support
-
-If you have any questions or need help:
-
-1. Check the help modal in the application (click the ? button)
-2. Review this README file
-3. Open an issue on the project repository
+## References
+[1] A. Bogomolnaia and H. Moulin. *A New Solution to the Random Assignment Problem.* Journal of Economic Theory 100 (2), 295-328, 2001.
 
 ---
+**Author** Masao Ishihara   (✉ masao.ishihara@xyz.edu)
 
-**Enjoy making fair assignments! 🎉** 
+*Last updated:* <!-- YYYY-MM-DD will be inserted by Git commit history --> 
