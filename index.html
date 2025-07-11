@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fair Assignment System</title>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-balance-scale"></i> Fair Assignment System</h1>
+            <p>A web-based implementation of the Bogomolnaia-Moulin algorithm for fair, envy-free assignments</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Session Setup Section -->
+            <section id="setup-section" class="card">
+                <h2><i class="fas fa-cog"></i> Session Setup</h2>
+                <div class="form-group">
+                    <label for="items-input">Items to Assign (comma-separated):</label>
+                    <input type="text" id="items-input" placeholder="e.g., Research, Writing, Presentation">
+                    <button id="start-session-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Assignment Session
+                    </button>
+                </div>
+            </section>
+
+            <section id="howto-section" class="card">
+                <h2>How to Use</h2>
+                <ol>
+                    <li><strong>Enter Items:</strong> Type the items you want to assign, separated by commas.</li>
+                    <li><strong>Start Session:</strong> Click "Start Assignment Session".</li>
+                    <li><strong>Add Participants:</strong> Add each participant's name.</li>
+                    <li><strong>Submit Rankings:</strong> Each participant ranks the items using numbers (e.g., "3,1,2").</li>
+                    <li><strong>Run Algorithm:</strong> Click "Run Algorithm" to compute fair probabilities.</li>
+                    <li><strong>Final Assignment:</strong> Click "Make Final Assignments" to get the results.</li>
+                </ol>
+            </section>
+
+            <!-- Hide other sections initially with inline display:none; they will be shown programmatically -->
+            <section id="participants-section" class="card hidden" style="display:none;">
+                <h2><i class="fas fa-users"></i> Participants</h2>
+                <div class="participants-container">
+                    <div class="form-group">
+                        <label for="participant-name">Add Participant:</label>
+                        <div class="input-group">
+                            <input type="text" id="participant-name" placeholder="Enter participant name">
+                            <button id="add-participant-btn" class="btn btn-secondary">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                    <div id="participants-list" class="participants-list"></div>
+                </div>
+            </section>
+
+            <!-- Rankings Section -->
+            <section id="rankings-section" class="card hidden" style="display:none;">
+                <h2><i class="fas fa-list-ol"></i> Submit Rankings</h2>
+                <div id="rankings-container"></div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="card hidden" style="display:none;">
+                <h2><i class="fas fa-chart-pie"></i> Algorithm Results</h2>
+                <div id="probability-results"></div>
+                <div class="form-group">
+                    <button id="make-assignments-btn" class="btn btn-success">
+                        <i class="fas fa-random"></i> Make Final Assignments
+                    </button>
+                </div>
+            </section>
+
+            <!-- Final Assignments Section -->
+            <section id="assignments-section" class="card hidden" style="display:none;">
+                <h2><i class="fas fa-trophy"></i> Final Assignments</h2>
+                <div id="final-assignments"></div>
+                <div class="form-group">
+                    <button id="new-session-btn" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> Start New Session
+                    </button>
+                </div>
+            </section>
+
+            <!-- Status Section -->
+            <section id="status-section" class="card" style="display:none;">
+                <h2><i class="fas fa-info-circle"></i> Session Status</h2>
+                <div id="status-content">
+                    <p>No active session. Start a new assignment session to begin.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Removed instructions modal and help button for cleaner initial view -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

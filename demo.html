@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fair Assignment System - Demo</title>
+    <!-- Removed all CSS links and style blocks for pure HTML design -->
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-balance-scale"></i> Fair Assignment System</h1>
+            <p>A web-based implementation of the Bogomolnaia-Moulin algorithm for fair, envy-free assignments</p>
+        </header>
+
+        <div class="demo-banner">
+            <i class="fas fa-play-circle"></i> Demo Mode - Pre-filled with example data
+        </div>
+
+        <div class="demo-steps">
+            <h3><i class="fas fa-lightbulb"></i> Quick Demo Guide</h3>
+            <ol>
+                <li><strong>Start Session:</strong> Click "Start Assignment Session" with the pre-filled items</li>
+                <li><strong>Add Participants:</strong> The system will auto-add Alice, Bob, and Charlie</li>
+                <li><strong>Submit Rankings:</strong> Enter rankings like "3,1,2" for each participant</li>
+                <li><strong>Run Algorithm:</strong> Click "Run Algorithm" to see fair probabilities</li>
+                <li><strong>Get Assignments:</strong> Click "Make Final Assignments" for results</li>
+            </ol>
+        </div>
+
+        <main class="main-content">
+            <!-- Session Setup Section -->
+            <section id="setup-section" class="card">
+                <h2><i class="fas fa-cog"></i> Session Setup</h2>
+                <div class="form-group">
+                    <label for="items-input">Items to Assign (comma-separated):</label>
+                    <input type="text" id="items-input" placeholder="e.g., Research, Writing, Presentation" value="Research, Writing, Presentation">
+                    <button id="start-session-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Start Assignment Session
+                    </button>
+                </div>
+            </section>
+
+            <!-- Participants Section -->
+            <section id="participants-section" class="card hidden">
+                <h2><i class="fas fa-users"></i> Participants</h2>
+                <div class="participants-container">
+                    <div class="form-group">
+                        <label for="participant-name">Add Participant:</label>
+                        <div class="input-group">
+                            <input type="text" id="participant-name" placeholder="Enter participant name">
+                            <button id="add-participant-btn" class="btn btn-secondary">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                    <div id="participants-list" class="participants-list"></div>
+                </div>
+            </section>
+
+            <!-- Rankings Section -->
+            <section id="rankings-section" class="card hidden">
+                <h2><i class="fas fa-list-ol"></i> Submit Rankings</h2>
+                <div id="rankings-container"></div>
+                <div class="form-group">
+                    <button id="run-algorithm-btn" class="btn btn-primary" disabled>
+                        <i class="fas fa-calculator"></i> Run Algorithm
+                    </button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="card hidden">
+                <h2><i class="fas fa-chart-pie"></i> Algorithm Results</h2>
+                <div id="probability-results"></div>
+                <div class="form-group">
+                    <button id="make-assignments-btn" class="btn btn-success">
+                        <i class="fas fa-random"></i> Make Final Assignments
+                    </button>
+                </div>
+            </section>
+
+            <!-- Final Assignments Section -->
+            <section id="assignments-section" class="card hidden">
+                <h2><i class="fas fa-trophy"></i> Final Assignments</h2>
+                <div id="final-assignments"></div>
+                <div class="form-group">
+                    <button id="new-session-btn" class="btn btn-primary">
+                        <i class="fas fa-redo"></i> Start New Session
+                    </button>
+                </div>
+            </section>
+
+            <!-- Status Section -->
+            <section id="status-section" class="card">
+                <h2><i class="fas fa-info-circle"></i> Session Status</h2>
+                <div id="status-content">
+                    <p>Demo mode active. Click "Start Assignment Session" to begin the demonstration.</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Instructions Modal -->
+        <div id="instructions-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2><i class="fas fa-question-circle"></i> How to Use</h2>
+                <div class="instructions">
+                    <h3>Step 1: Setup</h3>
+                    <p>Enter the items you want to assign (comma-separated) and click "Start Assignment Session".</p>
+                    
+                    <h3>Step 2: Add Participants</h3>
+                    <p>Add all participants who will be ranking the items.</p>
+                    
+                    <h3>Step 3: Submit Rankings</h3>
+                    <p>For each participant, rank the items by entering numbers separated by commas.</p>
+                    <p><strong>Example:</strong> If there are 3 items and you enter "3,1,2", it means:</p>
+                    <ul>
+                        <li>Item 3 is your 1st choice</li>
+                        <li>Item 1 is your 2nd choice</li>
+                        <li>Item 2 is your 3rd choice</li>
+                    </ul>
+                    
+                    <h3>Step 4: Run Algorithm</h3>
+                    <p>Click "Run Algorithm" to see the fair probability distributions.</p>
+                    
+                    <h3>Step 5: Get Assignments</h3>
+                    <p>Click "Make Final Assignments" to get the randomized final assignments.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Button -->
+        <button id="help-btn" class="help-btn">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Demo-specific initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-start the demo after a short delay
+            setTimeout(() => {
+                if (fairAssignmentSystem) {
+                    // Auto-start the session
+                    fairAssignmentSystem.startSession();
+                    
+                    // Auto-add demo participants
+                    setTimeout(() => {
+                        const demoParticipants = ['Alice', 'Bob', 'Charlie'];
+                        demoParticipants.forEach(name => {
+                            fairAssignmentSystem.participants.push(name);
+                            fairAssignmentSystem.rankings[name] = null;
+                        });
+                        fairAssignmentSystem.updateParticipantsList();
+                        fairAssignmentSystem.updateRankingsSection();
+                        fairAssignmentSystem.updateStatus();
+                    }, 500);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html> 
