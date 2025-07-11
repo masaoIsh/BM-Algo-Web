@@ -17,11 +17,10 @@ Despite its theoretical appeal, hands-on demonstrations are scarce outside resea
 
 ## 2 Algorithmic Details
 ### 2.1  Probabilistic-Serial Eating Procedure
-Let \(N = \{1,\dots,n\}\) be the agent set and \(M = \{1,\dots,m\}\) the item set.  Each item has unit capacity.  At time \(t=0\) all agents “eat” their top choice at unit speed.  When the capacity of an item \(j\) is exhausted, every agent currently eating \(j\) moves to their most preferred item that still has remaining capacity.  The process terminates when all capacities are consumed at \(t=1\).  The fraction of time agent \(i\) spends eating item \(j\) equals the probability \(p_{ij}\).
+Let N be the agent set and M the item set.  At time t=0 all agents “eat” their top choice with equal probability.  When the capacity of an item j is exhausted, every agent currently eating j moves to their most preferred item that still has remaining capacity.  The process terminates at t=1.  The fraction of time agent i spends eating item j equals the probability p.
 
 ### 2.2  Randomised Rounding
-The fractional matrix \(P=[p_{ij}]\) is converted to a discrete assignment via independent sampling without replacement.  Items are processed in random order; for each item, an agent is drawn with probability proportional to \(p_{ij}\) among those not yet assigned.
-
+The fractional matrix P is converted to a discrete assignment via independent sampling without replacement.  Items are processed in random order; for each item, an agent is drawn with probability proportional to p_ij among those not yet assigned.
 
 ## 3 Usage Instructions
 1. **Open** `index.html` in a browser.  No build step is required.
